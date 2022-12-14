@@ -26,7 +26,7 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
   > = {}
 
   return {
-    name: 'vite-plugin-copy',
+    name: 'copy-vite-plugin',
     apply: 'serve',
     configResolved: (config) => {
       if (config.root) {
@@ -38,7 +38,7 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
         const absToPath = path.posix.join(rootPath, item.to)
 
         if (!fs.existsSync(absFromPath)) {
-          console.warn(`[vite-plugin-copy]: ${absFromPath} is not exist`)
+          console.warn(`[copy-vite-plugin]: ${absFromPath} is not exist`)
           return
         }
 
@@ -91,14 +91,14 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
           const handledPath = normalizePath(filePath)
           if (!fs.existsSync(handledPath)) {
             console.warn(
-              `[vite-plugin-copy]: request file error, ${filePath} is not exist`
+              `[copy-vite-plugin]: request file error, ${filePath} is not exist`
             )
             next()
             return
           }
           if (!fs.statSync(handledPath).isFile()) {
             console.warn(
-              `[vite-plugin-copy]: request file error, ${filePath} is not a file`
+              `[copy-vite-plugin]: request file error, ${filePath} is not a file`
             )
             next()
             return
@@ -121,7 +121,7 @@ const copyBuildPlugin = (options: ICopyOptions): PluginOption => {
   let resolvedConfig: ResolvedConfig
 
   return {
-    name: 'vite-plugin-copy',
+    name: 'copy-vite-plugin',
     apply: 'build',
     configResolved(config) {
       resolvedConfig = config
@@ -137,7 +137,7 @@ const copyBuildPlugin = (options: ICopyOptions): PluginOption => {
           const absToPath = path.posix.join(outDir, item.to)
 
           if (!fs.existsSync(absFromPath)) {
-            console.warn(`[vite-plugin-copy]: ${absFromPath} is not exist`)
+            console.warn(`[copy-vite-plugin]: ${absFromPath} is not exist`)
             return
           }
 

@@ -1,4 +1,4 @@
-# vite-plugin-copy2
+# copy-vite-plugin
 
 > The most simple and easy-to-use vite copy plugin.
 
@@ -6,7 +6,7 @@ use like [copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugi
 
 If you are migrating from webpack to vite and looking for an copy plugin, this plugin will be very suitable for you.
 
-Compare the usage of `copy-webpack-plugin` and `vite-plugin-copy2`:
+Compare the usage of `copy-webpack-plugin` and `copy-vite-plugin`:
 
 ```js
 // webpack.config.js
@@ -28,7 +28,7 @@ module.exports = {
 
 ```js
 // vite.config.ts
-import { copy } from 'vite-plugin-copy2'
+import { copy } from 'copy-vite-plugin'
 
 export default defineConfig({
   plugins: [
@@ -48,11 +48,11 @@ export default defineConfig({
 
 ```bash
 # npm
-npm i vite-plugin-copy2 -D
+npm i copy-vite-plugin -D
 
 # yarn
-yarn add vite-plugin-copy2 -D
+yarn add copy-vite-plugin -D
 
 # pnpm
-pnpm add vite-plugin-copy2 -D
+pnpm add copy-vite-plugin -D
 ```
