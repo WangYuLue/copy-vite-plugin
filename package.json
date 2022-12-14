@@ -5,6 +5,11 @@
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
   "license": "MIT",
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "copy"
+  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
