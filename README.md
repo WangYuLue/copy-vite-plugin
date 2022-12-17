@@ -17,9 +17,9 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         // copy dir
-        { from: 'src/assets', to: 'assets' },
+        { from: 'src/images', to: 'images' },
         // copy file
-        { from: 'src/constants/config.json', to: 'config.json' }
+        { from: 'src/constants/info.json', to: 'info.json' }
       ]
     })
   ]
@@ -35,9 +35,9 @@ export default defineConfig({
     copy({
       pattern: [
         // copy dir
-        { from: 'src/assets', to: 'assets' },
+        { from: 'src/images', to: 'images' },
         // copy file
-        { from: 'src/constants/config.json', to: 'config.json' }
+        { from: 'src/constants/info.json', to: 'info.json' }
       ]
     })
   ]
