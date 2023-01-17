@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "publish:latest": "yarn build && yarn version:patch $$ npm publish .",
+    "publish:latest": "yarn build && yarn version:patch && npm publish .",
     "publish:alpha": "yarn build && yarn version:alpha && npm publish . --tag alpha",
     "version:patch": "npm version patch",
     "version:alpha": "npm version prerelease --preid alpha"

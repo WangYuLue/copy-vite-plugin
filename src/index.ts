@@ -25,38 +25,41 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
     }
   > = {}
 
+  const copyToRootPathDirs: string[] = []
+
+  pattern.forEach((item) => {
+    if (item.to) {
+      // 如果有 to 字段，表示需要 copy 到指定目录
+      const absFromPath = path.posix.join(rootPath, item.from)
+      const absToPath = path.posix.join(rootPath, item.to)
+
+      if (!fs.existsSync(absFromPath)) {
+        console.warn(`[copy-vite-plugin]: ${absFromPath} is not exist`)
+        return
+      }
+
+      const stat = fs.statSync(absFromPath)
+      let type: 'file' | 'dir' | 'unknown' = 'unknown'
+      if (stat.isFile()) {
+        type = 'file'
+      }
+      if (stat.isDirectory()) {
+        type = 'dir'
+      }
+      patternMap[absToPath] = {
+        from: absFromPath,
+        to: absToPath,
+        type
+      }
+    } else {
+      // 如果没有 to 字段，表示需要 copy 到根目录
+      copyToRootPathDirs.push(item.from)
+    }
+  })
+
   return {
     name: 'copy-vite-plugin',
     apply: 'serve',
-    configResolved: (config) => {
-      if (config.root) {
-        rootPath = config.root
-      }
-
-      pattern.forEach((item) => {
-        const absFromPath = path.posix.join(rootPath, item.from)
-        const absToPath = path.posix.join(rootPath, item.to)
-
-        if (!fs.existsSync(absFromPath)) {
-          console.warn(`[copy-vite-plugin]: ${absFromPath} is not exist`)
-          return
-        }
-
-        const stat = fs.statSync(absFromPath)
-        let type: 'file' | 'dir' | 'unknown' = 'unknown'
-        if (stat.isFile()) {
-          type = 'file'
-        }
-        if (stat.isDirectory()) {
-          type = 'dir'
-        }
-        patternMap[absToPath] = {
-          from: absFromPath,
-          to: absToPath,
-          type
-        }
-      })
-    },
     configureServer: (server: ViteDevServer) => {
       server.middlewares.use('/', async (req, res, next) => {
         if (!pattern || !req.url) {
@@ -84,6 +87,20 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
             return
           }
         }
+        // 如果本地没有该路径，检测 copy 到根目录的 dir 中有没有该路径
+        if (!fs.existsSync(absReqPath)) {
+          for (let i = 0; i < copyToRootPathDirs.length; i++) {
+            const fromPath = path.posix.join(
+              rootPath,
+              copyToRootPathDirs[i],
+              cleanUrl(req.url)
+            )
+            if (fs.existsSync(fromPath)) {
+              await sendContentByFilePath(fromPath)
+              return
+            }
+          }
+        }
 
         next()
 
@@ -104,11 +121,10 @@ const copyServePlugin = (options: ICopyOptions): PluginOption => {
             return
           }
           const content = await fs.promises.readFile(handledPath)
-          const strContent = content.toString()
           res.writeHead(200, {
             'Content-Type': mimeTypes.lookup(filePath) as string
           })
-          res.end(strContent)
+          res.end(content)
         }
       })
     }
